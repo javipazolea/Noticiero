@@ -13,15 +13,18 @@ import {
   Stack,
 } from "@mui/material";
 
-const categories = [
-  "business",
-  "entertainment",
-  "general",
-  "health",
-  "science",
-  "sports",
-  "technology",
-];
+// Mapeo de traducciones de categorías
+const categoryTranslations = {
+  business: "Negocios",
+  entertainment: "Entretenimiento",
+  general: "General",
+  health: "Salud",
+  science: "Ciencia",
+  sports: "Deportes",
+  technology: "Tecnología",
+};
+
+const categories = Object.keys(categoryTranslations);
 
 const SearchModal = ({ open, onClose }) => {
   const { theme } = useContext(UserContext);
@@ -65,8 +68,35 @@ const SearchModal = ({ open, onClose }) => {
           borderRadius: 2,
           maxHeight: "90vh",
           overflowY: "auto",
+          position: "relative",
         }}
       >
+        {/* Botón "X" para cerrar el modal */}
+        <button
+          onClick={onClose}
+          style={{
+            position: "absolute",
+            top: "10px",
+            right: "10px",
+            backgroundColor: theme === "light" ? "#f5f5f5" : "#333",
+            color: theme === "light" ? "#000" : "#fff",
+            border: "none",
+            borderRadius: "50%",
+            width: "30px",
+            height: "30px",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            fontSize: "1.2rem",
+            fontWeight: "bold",
+            cursor: "pointer",
+            boxShadow: "0 2px 4px rgba(0, 0, 0, 0.2)",
+            transition: "all 0.3s",
+          }}
+        >
+          ×
+        </button>
+
         <Typography id="search-modal-title" variant="h6" component="h2" mb={3}>
           Búsqueda Avanzada
         </Typography>
@@ -104,7 +134,7 @@ const SearchModal = ({ open, onClose }) => {
                     }}
                   />
                 }
-                label={category.charAt(0).toUpperCase() + category.slice(1)}
+                label={categoryTranslations[category]} // Mostrar traducción
                 sx={{
                   color: theme === "light" ? "#000" : "#fff",
                 }}

@@ -91,7 +91,7 @@ const NewsModal = ({ article, closeModal }) => {
             transition: "background-color 0.3s",
           }}
         >
-          Leer más
+          Ir a Noticia
         </a>
       </div>
     </div>

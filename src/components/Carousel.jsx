@@ -12,12 +12,16 @@ import sportsImg from "../assets/image/sports.jpg";
 import technologyImg from "../assets/image/technology.jpg";
 
 const categories = [
-  { label: "Business", image: businessImg },
-  { label: "Entertainment", image: entertainmentImg },
-  { label: "Health", image: healthImg },
-  { label: "Science", image: scienceImg },
-  { label: "Sports", image: sportsImg },
-  { label: "Technology", image: technologyImg },
+  { label: "Negocios", urlPath: "business", image: businessImg },
+  {
+    label: "Entretenimiento",
+    urlPath: "entertainment",
+    image: entertainmentImg,
+  },
+  { label: "Salud", urlPath: "health", image: healthImg },
+  { label: "Ciencia", urlPath: "science", image: scienceImg },
+  { label: "Deportes", urlPath: "sports", image: sportsImg },
+  { label: "Tecnología", urlPath: "technology", image: technologyImg },
 ];
 
 const Carousel = () => {
@@ -37,8 +41,8 @@ const Carousel = () => {
     );
   };
 
-  const handleCategoryClick = (category) => {
-    navigate(`/categorias/${category.toLowerCase()}`);
+  const handleCategoryClick = (urlPath) => {
+    navigate(`/categorias/${urlPath}`);
   };
 
   return (
@@ -135,7 +139,7 @@ const Carousel = () => {
               <Button
                 variant="contained"
                 color={theme === "light" ? "primary" : "secondary"}
-                onClick={() => handleCategoryClick(category.label)}
+                onClick={() => handleCategoryClick(category.urlPath)}
                 size="large"
                 sx={{
                   "&:hover": {
@@ -144,7 +148,7 @@ const Carousel = () => {
                   },
                 }}
               >
-                Go to {category.label}
+                Ir a {category.label}
               </Button>
             </Box>
           </Box>

@@ -128,7 +128,7 @@ const Cards = ({ articles }) => {
                   color={theme === "light" ? "primary" : "secondary"} // Botón dinámico
                   onClick={() => openModal(article, index)}
                 >
-                  See More
+                  Ver más
                 </Button>
               </Box>
             </Box>

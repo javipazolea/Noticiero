@@ -1,16 +1,32 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { useParams } from "react-router-dom";
 import Cards from "../../components/Cards";
 import Pagination from "../../components/paginacion/Pagination";
 import { useLoading } from "../../context/LoadingContext";
+import { UserContext } from "../../context/UserContext";
+import { Typography, Box } from "@mui/material";
 
 const PaginaCategoria = () => {
   const { categoria } = useParams();
+  const { theme } = useContext(UserContext);
   const [articles, setArticles] = useState([]);
   const [error, setError] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const { setIsLoading } = useLoading();
   const articlesPerPage = 6;
+
+  // Mapeo de categorías  a español
+  const categoryTranslations = {
+    business: "Negocios",
+    entertainment: "Entretenimiento",
+    general: "General",
+    health: "Salud",
+    science: "Ciencia",
+    sports: "Deportes",
+    technology: "Tecnología",
+  };
+
+  const translatedCategory = categoryTranslations[categoria] || categoria;
 
   const totalPages = Math.ceil(articles.length / articlesPerPage);
 
@@ -58,12 +74,36 @@ const PaginaCategoria = () => {
   );
 
   return (
-    <div>
-      <h1>
-        Noticias de {categoria.charAt(0).toUpperCase() + categoria.slice(1)}
-      </h1>
+    <Box
+      sx={{
+        pt: 15,
+        px: 3,
+        minHeight: "100vh",
+      }}
+    >
+      {/* Título */}
+      <Typography
+        variant="h2"
+        component="h1"
+        align="center"
+        sx={{
+          mb: 4,
+          fontWeight: "bold",
+          color: theme === "light" ? "#1a237e" : "#fff",
+          textShadow: "2px 2px 4px rgba(0,0,0,0.2)",
+          animation: "fadeIn 0.5s ease-in",
+          "@keyframes fadeIn": {
+            "0%": { opacity: 0, transform: "translateY(-20px)" },
+            "100%": { opacity: 1, transform: "translateY(0)" },
+          },
+        }}
+      >
+        Noticias de {translatedCategory}
+      </Typography>
       {error ? (
-        <p style={{ color: "red" }}>Error loading news: {error}</p>
+        <Typography color="error" align="center">
+          Error loading news: {error}
+        </Typography>
       ) : (
         <>
           <Cards articles={displayedArticles} />
@@ -74,7 +114,7 @@ const PaginaCategoria = () => {
           />
         </>
       )}
-    </div>
+    </Box>
   );
 };
 
