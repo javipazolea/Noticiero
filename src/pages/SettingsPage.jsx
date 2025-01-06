@@ -14,25 +14,28 @@ import { UserContext } from "../context/UserContext";
 import ChangePasswordModal from "../components/modal/ChangePasswordModal";
 
 const SettingsPage = () => {
-  const { theme, username, setUsername, user, updateProfile, changePassword } =
-    useContext(UserContext);
+  const {
+    theme,
+    username,
+    setUsername,
+    user,
+    updateProfile,
+    changePassword,
+    logout,
+  } = useContext(UserContext);
 
-  const [avatar, setAvatar] = useState(
-    localStorage.getItem("avatar") || user?.avatar || ""
-  );
-  const [tempUsername, setTempUsername] = useState(
-    localStorage.getItem("username") || username
-  );
+  const [avatar, setAvatar] = useState(user?.avatar || "");
+  const [tempUsername, setTempUsername] = useState(username);
   const [passwordDialogOpen, setPasswordDialogOpen] = useState(false);
 
   useEffect(() => {
-    // Actualizar estados al montar la página desde el Local Storage si existen
+    // Al montar la página, actualiza el avatar y el nombre de usuario si están en el localStorage
     const storedUsername = localStorage.getItem("username");
     const storedAvatar = localStorage.getItem("avatar");
 
     if (storedUsername) setTempUsername(storedUsername);
     if (storedAvatar) setAvatar(storedAvatar);
-  }, []);
+  }, [username, user]); // Depender de `username` y `user` asegura que se actualice cuando el usuario cambie
 
   const handleSaveProfile = async () => {
     const success = await updateProfile({ username: tempUsername, avatar });
@@ -56,6 +59,13 @@ const SettingsPage = () => {
       };
       reader.readAsDataURL(file);
     }
+  };
+
+  const handleLogout = () => {
+    // Limpiar localStorage al hacer logout
+    localStorage.removeItem("username");
+    localStorage.removeItem("avatar");
+    logout(); // Llamada para cerrar sesión, si tienes este método
   };
 
   return (
@@ -138,6 +148,8 @@ const SettingsPage = () => {
               </Button>
             </Box>
           </Grid>
+
+          {/* Agregar un botón de logout */}
         </Grid>
       </Paper>
 
