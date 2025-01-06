@@ -1,0 +1,23 @@
+.navbar-logo {
+    height: 80px;
+    width: auto;
+    margin-left: -23px;
+    transition: height 0.3s ease, margin-left 0.3s ease;
+    margin-top: 5px;
+    margin-bottom: 4px;
+  }
+  
+  /* Estilos responsivos */
+  @media (max-width: 600px) {
+    .navbar-logo {
+      height: 60px;
+      margin-left: 0;
+    }
+  }
+  
+  @media (min-width: 600px) and (max-width: 960px) {
+    .navbar-logo {
+      height: 75px;
+      margin-left: 15px;
+    }
+  }

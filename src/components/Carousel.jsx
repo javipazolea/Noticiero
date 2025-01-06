@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { Box, Button, IconButton } from "@mui/material";
 import { ArrowBackIos, ArrowForwardIos } from "@mui/icons-material";
+import { UserContext } from "../context/UserContext";
 
 import businessImg from "../assets/image/business.jpg";
 import entertainmentImg from "../assets/image/entertainment.jpg";
@@ -20,6 +21,7 @@ const categories = [
 ];
 
 const Carousel = () => {
+  const { theme } = useContext(UserContext);
   const [currentIndex, setCurrentIndex] = useState(0);
   const navigate = useNavigate();
 
@@ -49,6 +51,7 @@ const Carousel = () => {
         overflow: "hidden",
         borderRadius: 2,
         boxShadow: 3,
+        backgroundColor: theme === "light" ? "#f5f5f5" : "#121212",
       }}
     >
       <Box
@@ -70,7 +73,7 @@ const Carousel = () => {
               flexDirection: "column",
               justifyContent: "center",
               alignItems: "center",
-              backgroundColor: "#000", // Fondo negro para evitar espacios vacíos
+              backgroundColor: theme === "light" ? "#fff" : "#000",
             }}
           >
             <Box
@@ -87,7 +90,10 @@ const Carousel = () => {
                   left: 0,
                   width: "100%",
                   height: "100%",
-                  backgroundColor: "rgba(0,0,0,0.3)", // Overlay oscuro
+                  backgroundColor:
+                    theme === "light"
+                      ? "rgba(0,0,0,0.1)"
+                      : "rgba(255,255,255,0.1)",
                   zIndex: 1,
                 },
               }}
@@ -107,12 +113,14 @@ const Carousel = () => {
               sx={{
                 position: "relative",
                 zIndex: 2,
-                color: "white",
-                textShadow: "2px 2px 4px rgba(0,0,0,0.5)",
+                color: theme === "light" ? "#000" : "#fff",
                 padding: "20px 40px",
                 borderRadius: "8px",
                 textAlign: "center",
-                backgroundColor: "rgba(0,0,0,0.5)",
+                backgroundColor:
+                  theme === "light"
+                    ? "rgba(255,255,255,0.7)"
+                    : "rgba(0,0,0,0.7)",
                 backdropFilter: "blur(5px)",
               }}
             >
@@ -126,7 +134,7 @@ const Carousel = () => {
               </h3>
               <Button
                 variant="contained"
-                color="primary"
+                color={theme === "light" ? "primary" : "secondary"}
                 onClick={() => handleCategoryClick(category.label)}
                 size="large"
                 sx={{
@@ -151,9 +159,10 @@ const Carousel = () => {
           left: 10,
           transform: "translateY(-50%)",
           backgroundColor: "rgba(0,0,0,0.5)",
-          color: "#fff",
+          color: theme === "light" ? "#fff" : "#000",
           "&:hover": {
-            backgroundColor: "rgba(0,0,0,0.7)",
+            backgroundColor:
+              theme === "light" ? "rgba(0,0,0,0.7)" : "rgba(255,255,255,0.7)",
             transform: "translateY(-50%) scale(1.1)",
           },
           transition: "all 0.2s",
@@ -171,9 +180,10 @@ const Carousel = () => {
           right: 10,
           transform: "translateY(-50%)",
           backgroundColor: "rgba(0,0,0,0.5)",
-          color: "#fff",
+          color: theme === "light" ? "#fff" : "#000",
           "&:hover": {
-            backgroundColor: "rgba(0,0,0,0.7)",
+            backgroundColor:
+              theme === "light" ? "rgba(0,0,0,0.7)" : "rgba(255,255,255,0.7)",
             transform: "translateY(-50%) scale(1.1)",
           },
           transition: "all 0.2s",
@@ -182,37 +192,6 @@ const Carousel = () => {
       >
         <ArrowForwardIos />
       </IconButton>
-
-      <Box
-        sx={{
-          position: "absolute",
-          bottom: 20,
-          left: "50%",
-          transform: "translateX(-50%)",
-          display: "flex",
-          gap: 1,
-          zIndex: 3,
-        }}
-      >
-        {categories.map((_, index) => (
-          <Box
-            key={index}
-            sx={{
-              width: 12,
-              height: 12,
-              borderRadius: "50%",
-              backgroundColor: currentIndex === index ? "#1976d2" : "#fff",
-              transition: "background-color 0.3s",
-              cursor: "pointer",
-              "&:hover": {
-                transform: "scale(1.2)",
-              },
-              transition: "all 0.2s",
-            }}
-            onClick={() => setCurrentIndex(index)}
-          />
-        ))}
-      </Box>
     </Box>
   );
 };

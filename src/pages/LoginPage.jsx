@@ -6,7 +6,7 @@ import { UserContext } from "../context/UserContext";
 
 const LoginPage = () => {
   const navigate = useNavigate();
-  const { login } = useContext(UserContext);
+  const { login, theme } = useContext(UserContext);
   const [error, setError] = useState("");
 
   const handleSubmit = (data) => {
@@ -31,14 +31,21 @@ const LoginPage = () => {
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
+          backgroundColor: theme === "light" ? "#fff" : "#1a1a1a",
+          borderRadius: 2,
+          boxShadow: 3,
+          padding: 3,
         }}
       >
-        <Login onSubmit={handleSubmit} error={error} />
+        <Login onSubmit={handleSubmit} error={error} theme={theme} />
         <Button
           fullWidth
           variant="text"
           onClick={() => navigate("/register")}
-          sx={{ mt: 2 }}
+          sx={{
+            mt: 2,
+            color: theme === "light" ? "#1976d2" : "#90caf9",
+          }}
         >
           ¿No tienes cuenta? Regístrate
         </Button>

@@ -7,8 +7,13 @@ import { UserContext } from "../context/UserContext";
 const Cards = ({ articles }) => {
   const [selectedArticle, setSelectedArticle] = useState(null);
   const [flippedId, setFlippedId] = useState(null);
-  const { user, addToFavorites, removeFromFavorites, isArticleFavorite } =
-    useContext(UserContext);
+  const {
+    user,
+    addToFavorites,
+    removeFromFavorites,
+    isArticleFavorite,
+    theme,
+  } = useContext(UserContext);
 
   const openModal = (article, index) => {
     setSelectedArticle(article);
@@ -68,7 +73,8 @@ const Cards = ({ articles }) => {
                 width: "100%",
                 height: "100%",
                 backfaceVisibility: "hidden",
-                backgroundColor: "#fff",
+                backgroundColor: theme === "light" ? "#fff" : "#333", // Fondo dinámico
+                color: theme === "light" ? "#000" : "#fff", // Texto dinámico
                 borderRadius: 2,
                 boxShadow: 3,
                 overflow: "hidden",
@@ -106,7 +112,7 @@ const Cards = ({ articles }) => {
                   {user && (
                     <IconButton
                       onClick={(e) => handleFavoriteClick(e, article)}
-                      color="primary"
+                      color={theme === "light" ? "primary" : "secondary"} // Icono dinámico
                       sx={{ ml: 1 }}
                     >
                       {isArticleFavorite(article.title) ? (
@@ -119,6 +125,7 @@ const Cards = ({ articles }) => {
                 </Box>
                 <Button
                   variant="contained"
+                  color={theme === "light" ? "primary" : "secondary"} // Botón dinámico
                   onClick={() => openModal(article, index)}
                 >
                   See More
@@ -134,7 +141,7 @@ const Cards = ({ articles }) => {
                 height: "100%",
                 backfaceVisibility: "hidden",
                 transform: "rotateY(180deg)",
-                backgroundColor: "#1a1a1a",
+                backgroundColor: theme === "light" ? "#eee" : "#1a1a1a", // Fondo dinámico
                 borderRadius: 2,
                 boxShadow: 3,
                 overflow: "hidden",

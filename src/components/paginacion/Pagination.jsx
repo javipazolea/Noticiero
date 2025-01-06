@@ -1,7 +1,10 @@
 import { Pagination as MuiPagination, Box } from "@mui/material";
-import { useLoading } from "../../context/LoadingContext"; // Ajusta la ruta según tu estructura
+import { useContext } from "react";
+import { UserContext } from "../../context/UserContext"; // Asegúrate de que la ruta sea correcta
+import { useLoading } from "../../context/LoadingContext";
 
 const Pagination = ({ currentPage, totalPages, onPageChange }) => {
+  const { theme } = useContext(UserContext); // Accede al contexto para obtener el tema
   const { setIsLoading } = useLoading();
 
   if (totalPages === 0 || currentPage > totalPages || currentPage < 1) {
@@ -11,7 +14,6 @@ const Pagination = ({ currentPage, totalPages, onPageChange }) => {
   const handleChange = async (_, page) => {
     if (page >= 1 && page <= totalPages) {
       setIsLoading(true);
-      // Añadimos un delay artificial
       await new Promise((resolve) => setTimeout(resolve, 700));
       onPageChange(page);
       setIsLoading(false);
@@ -24,8 +26,7 @@ const Pagination = ({ currentPage, totalPages, onPageChange }) => {
         count={totalPages}
         page={currentPage}
         onChange={handleChange}
-        color="primary"
-        size="large"
+        color={theme === "light" ? "primary" : "secondary"}
         showFirstButton
         showLastButton
         siblingCount={1}

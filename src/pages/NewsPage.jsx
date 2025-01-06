@@ -14,9 +14,9 @@ const NewsPage = () => {
 
   useEffect(() => {
     const apiKey = "11b465cd6c684f83a7886695c2211daf";
-    const url = `https://newsapi.org/v2/top-headlines?country=${country}&apiKey=${apiKey}`;
+    const url = `https://newsapi.org/v2/top-headlines?country=us&apiKey=${apiKey}`;
     fetchNews(url);
-  }, [country, fetchNews]);
+  }, [fetchNews]);
 
   const handlePageChange = (page) => {
     setCurrentPage(page);
@@ -38,7 +38,7 @@ const NewsPage = () => {
       <br></br>
       <Carousel />
       {error ? (
-        <p style={{ color: "red" }}>Error loading news: {error}</p>
+        <p style={{ color: "red" }}>Error al cargar las noticias{error}</p>
       ) : (
         <>
           <Cards articles={displayedArticles} />

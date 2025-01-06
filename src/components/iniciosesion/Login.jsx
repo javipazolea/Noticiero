@@ -14,7 +14,7 @@ import {
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import NewsIcon from "@mui/icons-material/Newspaper";
 
-const Login = ({ onSubmit, error }) => {
+const Login = ({ onSubmit, error, theme }) => {
   const [showPassword, setShowPassword] = useState(false);
   const {
     register,
@@ -34,10 +34,22 @@ const Login = ({ onSubmit, error }) => {
           borderRadius: 2,
           maxWidth: 400,
           mx: "auto",
+          backgroundColor: theme === "light" ? "#fff" : "#1a1a1a",
         }}
       >
-        <NewsIcon sx={{ fontSize: 40, mb: 2, color: "primary.main" }} />
-        <Typography component="h1" variant="h5" gutterBottom>
+        <NewsIcon
+          sx={{
+            fontSize: 40,
+            mb: 2,
+            color: theme === "light" ? "primary.main" : "secondary.main",
+          }}
+        />
+        <Typography
+          component="h1"
+          variant="h5"
+          gutterBottom
+          color={theme === "light" ? "black" : "white"}
+        >
           Iniciar Sesión
         </Typography>
 
@@ -66,6 +78,11 @@ const Login = ({ onSubmit, error }) => {
             })}
             error={!!errors.email}
             helperText={errors.email?.message}
+            InputProps={{
+              style: {
+                color: theme === "light" ? "#000" : "#fff",
+              },
+            }}
           />
           <TextField
             margin="normal"
@@ -78,11 +95,15 @@ const Login = ({ onSubmit, error }) => {
             error={!!errors.password}
             helperText={errors.password?.message}
             InputProps={{
+              style: {
+                color: theme === "light" ? "#000" : "#fff",
+              },
               endAdornment: (
                 <InputAdornment position="end">
                   <IconButton
                     onClick={() => setShowPassword(!showPassword)}
                     edge="end"
+                    color={theme === "light" ? "primary" : "secondary"}
                   >
                     {showPassword ? <VisibilityOff /> : <Visibility />}
                   </IconButton>
@@ -93,7 +114,8 @@ const Login = ({ onSubmit, error }) => {
           <Button
             type="submit"
             fullWidth
-            variant="contained"
+            variant={theme === "light" ? "contained" : "outlined"}
+            color={theme === "light" ? "primary" : "secondary"}
             sx={{ mt: 3, mb: 2 }}
           >
             Iniciar Sesión

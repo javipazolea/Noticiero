@@ -1,14 +1,16 @@
 import { Link, useNavigate } from "react-router-dom";
-import { useContext, useState } from "react"; // Añadido useState
+import { useContext, useState } from "react";
 import { AppBar, Toolbar, IconButton, Box } from "@mui/material";
 import { Search, Settings, Favorite, Login, Logout } from "@mui/icons-material";
-import SearchModal from "./modal/SearchModal";
-import { UserContext } from "../context/UserContext";
+import SearchModal from "../modal/SearchModal";
+import { UserContext } from "../../context/UserContext";
 
-import logo from "../assets/image/logo.jpg";
+import logoClaro from "../../assets/image/logotemaclaro.png";
+import logoOscuro from "../../assets/image/logotemaoscuro.png";
+import "./navbar.css";
 
 const Navbar = () => {
-  const { user, logout } = useContext(UserContext);
+  const { user, logout, theme } = useContext(UserContext);
   const [searchModalOpen, setSearchModalOpen] = useState(false);
   const navigate = useNavigate();
 
@@ -26,7 +28,7 @@ const Navbar = () => {
       <AppBar
         position="fixed"
         sx={{
-          backgroundColor: "white",
+          backgroundColor: theme === "light" ? "white" : "black",
           boxShadow: "0 0 5px rgba(0, 0, 0, 0.2)",
         }}
       >
@@ -42,13 +44,9 @@ const Navbar = () => {
             }}
           >
             <img
-              src={logo}
+              src={theme === "light" ? logoClaro : logoOscuro}
               alt="UpNews Logo"
-              style={{
-                height: "90px",
-                width: "auto",
-                marginLeft: "-23px",
-              }}
+              className="navbar-logo"
             />
           </Box>
           <Box
@@ -61,7 +59,7 @@ const Navbar = () => {
             }}
           >
             <IconButton
-              color="primary"
+              color={theme === "light" ? "primary" : "secondary"}
               size="large"
               onClick={() => setSearchModalOpen(true)}
             >
@@ -73,7 +71,7 @@ const Navbar = () => {
                 <IconButton
                   component={Link}
                   to="/settings"
-                  color="primary"
+                  color={theme === "light" ? "primary" : "secondary"}
                   size="large"
                 >
                   <Settings />
@@ -82,7 +80,7 @@ const Navbar = () => {
                 <IconButton
                   component={Link}
                   to="/favorites"
-                  color="primary"
+                  color={theme === "light" ? "primary" : "secondary"}
                   size="large"
                 >
                   <Favorite />
@@ -92,7 +90,7 @@ const Navbar = () => {
           </Box>
 
           <IconButton
-            color="primary"
+            color={theme === "light" ? "primary" : "secondary"}
             size="large"
             onClick={handleAuth}
             sx={{ minWidth: "100px" }}

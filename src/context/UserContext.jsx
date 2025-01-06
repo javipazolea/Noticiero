@@ -1,62 +1,149 @@
-// UserContext.jsx
 import { createContext, useState, useEffect, useCallback } from "react";
 import { useLoading } from "./LoadingContext";
-import defaultImage from "../assets/image/imagencards.jpg";
 
 export const UserContext = createContext();
 
 export const UserProvider = ({ children }) => {
-  const [theme, setTheme] = useState("light");
-  const [username, setUsername] = useState("User");
-  const [country, setCountry] = useState("us");
+  const [theme, setTheme] = useState(
+    () => localStorage.getItem("theme") || "light"
+  );
   const [user, setUser] = useState(null);
+  const [username, setUsername] = useState("User");
   const [articles, setArticles] = useState([]);
   const [favorites, setFavorites] = useState([]);
   const [error, setError] = useState(null);
   const { setIsLoading } = useLoading();
 
-  // Cargar usuario y favoritos al iniciar
+  // Cargar configuraciones iniciales
   useEffect(() => {
-    const savedUser = localStorage.getItem("user");
-    const savedFavorites = localStorage.getItem("favorites");
+    const loadInitialSettings = () => {
+      const savedUser = localStorage.getItem("user");
+      const savedFavorites = localStorage.getItem("favorites");
 
-    if (savedUser) {
-      setUser(JSON.parse(savedUser));
-    }
+      if (savedUser) {
+        const userData = JSON.parse(savedUser);
+        setUser(userData);
+        setUsername(userData.username || "User");
+      }
 
-    if (savedFavorites) {
-      setFavorites(JSON.parse(savedFavorites));
-    }
+      if (savedFavorites) {
+        setFavorites(JSON.parse(savedFavorites));
+      }
+    };
+
+    loadInitialSettings();
   }, []);
 
-  const login = useCallback((userData) => {
-    localStorage.setItem("user", JSON.stringify(userData));
-    setUser(userData);
-
-    // Cargar favoritos del usuario al hacer login
-    const savedFavorites = localStorage.getItem("favorites");
-    if (savedFavorites) {
-      setFavorites(JSON.parse(savedFavorites));
+  // Guardar configuraciones cuando cambien
+  useEffect(() => {
+    if (user) {
+      const updatedUser = {
+        ...user,
+        theme,
+        username,
+      };
+      localStorage.setItem("user", JSON.stringify(updatedUser));
     }
-  }, []);
+    localStorage.setItem("theme", theme);
+  }, [theme, username, user]);
+
+  // Funciones de autenticación
+  const login = useCallback(
+    (userData) => {
+      const enhancedUserData = {
+        ...userData,
+        theme,
+      };
+      localStorage.setItem("user", JSON.stringify(enhancedUserData));
+      setUser(enhancedUserData);
+      setUsername(userData.username || userData.name || "User");
+
+      const savedFavorites = localStorage.getItem("favorites");
+      if (savedFavorites) {
+        setFavorites(JSON.parse(savedFavorites));
+      }
+    },
+    [theme]
+  );
 
   const logout = useCallback(() => {
     localStorage.removeItem("user");
     setUser(null);
-    setFavorites([]); // Limpiar favoritos al hacer logout
+    setFavorites([]);
   }, []);
 
+  // Gestión de contraseña
+  const changePassword = useCallback(
+    async (currentPassword, newPassword) => {
+      if (!user) return false;
+
+      // Verificar la contraseña actual en los usuarios almacenados
+      const users = JSON.parse(localStorage.getItem("users") || "[]");
+      const userIndex = users.findIndex(
+        (u) => u.email === user.email && u.password === currentPassword
+      );
+
+      if (userIndex === -1) return false;
+
+      // Actualizar
+      users[userIndex].password = newPassword;
+      localStorage.setItem("users", JSON.stringify(users));
+
+      const updatedUser = { ...user, password: newPassword };
+      localStorage.setItem("user", JSON.stringify(updatedUser));
+      setUser(updatedUser);
+
+      return true;
+    },
+    [user]
+  );
+
+  // Gestión de perfil
+  const updateProfile = useCallback(
+    (profileData) => {
+      if (!user) return false;
+
+      try {
+        const updatedUser = {
+          ...user,
+          ...profileData,
+        };
+
+        //users array
+        const users = JSON.parse(localStorage.getItem("users") || "[]");
+        const userIndex = users.findIndex((u) => u.email === user.email);
+        if (userIndex !== -1) {
+          users[userIndex] = {
+            ...users[userIndex],
+            ...profileData,
+          };
+          localStorage.setItem("users", JSON.stringify(users));
+        }
+
+        //usuario actual
+        localStorage.setItem("user", JSON.stringify(updatedUser));
+        setUser(updatedUser);
+        if (profileData.username) setUsername(profileData.username);
+        return true;
+      } catch (error) {
+        console.error("Error updating profile:", error);
+        return false;
+      }
+    },
+    [user]
+  );
+
+  // Gestión de favoritos
   const addToFavorites = useCallback(
     (article) => {
-      if (!user) return; // Solo usuarios autenticados pueden añadir favoritos
+      if (!user) return;
 
       setFavorites((prevFavorites) => {
-        // Verificar si el artículo ya está en favoritos
         const isDuplicate = prevFavorites.some(
           (fav) => fav.title === article.title
         );
         if (isDuplicate) return prevFavorites;
-        // Agregar timestamp al artículo
+
         const articleWithTimestamp = {
           ...article,
           addedAt: Date.now(),
@@ -87,6 +174,7 @@ export const UserProvider = ({ children }) => {
     [favorites]
   );
 
+  // Función para obtener noticias
   const fetchNews = useCallback(
     async (url) => {
       setIsLoading(true);
@@ -120,13 +208,13 @@ export const UserProvider = ({ children }) => {
   const value = {
     theme,
     setTheme,
+    user,
     username,
     setUsername,
-    country,
-    setCountry,
-    user,
     login,
     logout,
+    changePassword,
+    updateProfile,
     articles,
     error,
     fetchNews,
